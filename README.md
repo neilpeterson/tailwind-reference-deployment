@@ -14,7 +14,7 @@ To validate that the deployment has completed, select the Azure Container Instan
 
 ![alt text](./images/aci.jpg)
 
-Select **Containers** and **Logs**.
+Select **Containers** and **Logs**. One the container state has changed from **Running** to **Terminated**, the deployment automation has completed.
 
 ![alt text](./images/logs.jpg)
 
