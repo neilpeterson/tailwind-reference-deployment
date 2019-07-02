@@ -14,11 +14,11 @@ To validate that the deployment has completed, select the Azure Container Instan
 
 ![alt text](./images/aci.jpg)
 
-Select **Containers** and **Logs**. One the container state has changed from **Running** to **Terminated**, the deployment automation has completed.
+Select **Containers**. Once the container state has changed from **Running** to **Terminated**, the deployment automation has completed. Select logs.
 
 ![alt text](./images/logs.jpg)
 
-Scroll to the bottom of the logs and you can retrieve both the application URL and the command needed to connect to the Kubernetes cluster.
+Scroll to the bottom of the logs to retrieve both the application URL and the command needed to connect to the Kubernetes cluster.
 
 ![alt text](./images/connection.jpg)
 
