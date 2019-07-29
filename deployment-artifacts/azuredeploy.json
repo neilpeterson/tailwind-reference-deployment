@@ -10,6 +10,9 @@
 		},
 		"FQDNPrefix": {
 			"type": "string"
+		},
+		"emailAddress": {
+			"type": "string"
 		}
 	},
 	"variables": {
@@ -103,6 +106,10 @@
 							{
 								"name": "SECRET",
 								"secureValue": "[parameters('servicePrincipalSecret')]"
+							},
+							{
+								"name": "USER_ID",
+								"secureValue": "[parameters('emailAddress')]"
 							}
 						]
 					}
