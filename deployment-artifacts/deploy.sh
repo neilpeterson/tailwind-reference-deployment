@@ -16,9 +16,9 @@ SERVICE_PATH=TailwindTraders-Backend/Source/Services
 VALUES=../../../test123.yaml
 
 # Register providers
-az provider register --namespace Microsoft.OperationalInsights
-az provider register --namespace Microsoft.DocumentDB
-az provider register --namespace Microsoft.DBforPostgreSQL
+# az provider register --namespace Microsoft.OperationalInsights
+# az provider register --namespace Microsoft.DocumentDB
+# az provider register --namespace Microsoft.DBforPostgreSQL
 
 # Get backend code
 git clone https://github.com/neilpeterson/TailwindTraders-Backend.git
