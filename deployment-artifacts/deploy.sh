@@ -45,10 +45,10 @@ printf "\n*** Create Helm values file... ***\n"
 pwsh $HELM_SCRIPT -resourceGroup $RESOURCE_GROUP_NAME -sqlPwd Password12 -outputFile test123.yaml
 
 # Create Kubernetes / ACR secrets
-printf "\n*** Create ACR secrets in Kubernetes... ***\n"
+# printf "\n*** Create ACR secrets in Kubernetes... ***\n"
 
-ACR=$(az acr list -g $RESOURCE_GROUP_NAME --query [0].name -o tsv)
-pwsh $SECRETS_SCRIPT -resourceGroup $RESOURCE_GROUP_NAME -acrName $ACR
+# ACR=$(az acr list -g $RESOURCE_GROUP_NAME --query [0].name -o tsv)
+# pwsh $SECRETS_SCRIPT -resourceGroup $RESOURCE_GROUP_NAME -acrName $ACR
 
 # Create Kubernetes Service Account
 printf "\n*** Create Helm service account in Kubernetes... ***\n"
@@ -90,9 +90,9 @@ az storage blob upload-batch --destination $BLOB_ENDPOINT --destination profiles
 git clone https://github.com/neilpeterson/TailwindTraders-Website.git
 
 # Build and push web
-cd TailwindTraders-Website/Source/Tailwind.Traders.Web
-az acr build -r $ACR -t web .
-cd ../../../
+# cd TailwindTraders-Website/Source/Tailwind.Traders.Web
+# az acr build -r $ACR -t web .
+# cd ../../../
 
 # Create web Helm release
 helm install --name web -f TailwindTraders-Website/Deploy/helm/gvalues.yaml --set ingress.protocol=http --set ingress.hosts={$INGRESS} --set image.repository=$REGISTRY/web --set image.tag=latest TailwindTraders-Website/Deploy/helm/web/
