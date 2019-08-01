@@ -30,7 +30,7 @@ git clone $BACKEND
 printf "\n*** Deploying resources: this will take a few minutes... ***\n"
 
 az group deployment create -g $RESOURCE_GROUP_NAME --template-file $AKS_TEMPLATE \
-  --parameters servicePrincipalId=$CLIENT_ID servicePrincipalSecret=$SECRET $sqladmin=$SQL_ADMIN \
+  --parameters servicePrincipalId=$CLIENT_ID servicePrincipalSecret=$SECRET sqlServerAdministratorLogin=$SQL_ADMIN \
   sqlServerAdministratorLoginPassword=$SQL_PASSWORD aksVersion=1.13.5 pgversion=10
 
 # Install Helm on Kubernetes cluster
