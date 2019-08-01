@@ -16,7 +16,7 @@ SERVICE_PATH=TailwindTraders-Backend/Source/Services
 VALUES=../../../test123.yaml
 
 # Get backend code
-git clone https://github.com/neilpeterson/TailwindTraders-Backend.git
+git clone https://github.com/microsoft/TailwindTraders-Backend.git
 
 # Deploy backend infrastructure
 printf "\n*** Deploying resources: this will take a few minutes... ***\n"
