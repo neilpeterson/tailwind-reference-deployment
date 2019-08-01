@@ -33,7 +33,7 @@ printf "\n*** Installing Tiller on Kubernets cluster... ***\n"
 AKS_CLUSTER=$(az aks list --resource-group $RESOURCE_GROUP_NAME --query [0].name -o tsv)
 az aks get-credentials --name $AKS_CLUSTER --resource-group $RESOURCE_GROUP_NAME --admin
 kubectl apply -f https://raw.githubusercontent.com/Azure/helm-charts/master/docs/prerequisities/helm-rbac-config.yaml
-helm init --service-account tiller
+helm init --wait --service-account tiller
 
 # Create postgres DB, Disable SSL, and set Firewall
 printf "\n*** Create stockdb Postgres database... ***\n"
@@ -69,7 +69,7 @@ helm install --name my-tt-mobilebff -f $VALUES --set ingress.hosts={$INGRESS} --
 helm install --name my-tt-webbff -f $VALUES --set ingress.hosts={$INGRESS} --set image.repository=$REGISTRY/webapigw --set image.tag=latest $CHARTS/webbff
 helm install --name web -f TailwindTraders-Website/Deploy/helm/gvalues.yaml --set ingress.protocol=http --set ingress.hosts={$INGRESS} --set image.repository=$REGISTRY/web --set image.tag=latest TailwindTraders-Website/Deploy/helm/web/
 
-# Deploy Images
+# Copy website images to storage
 printf "\n***Copying application images (graphics) to Azure storage.***\n"
 
 STORAGE=$(az storage account list -g $RESOURCE_GROUP_NAME -o table --query  [].name -o tsv)
