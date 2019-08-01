@@ -67,6 +67,8 @@ helm install --name my-tt-cart -f $VALUES --set ingress.hosts={$INGRESS} --set i
 helm install --name my-tt-login -f $VALUES --set ingress.hosts={$INGRESS} --set image.repository=$REGISTRY/login.api --set image.tag=latest $CHARTS/login-api
 helm install --name my-tt-mobilebff -f $VALUES --set ingress.hosts={$INGRESS} --set image.repository=$REGISTRY/mobileapigw --set image.tag=latest $CHARTS/mobilebff
 helm install --name my-tt-webbff -f $VALUES --set ingress.hosts={$INGRESS} --set image.repository=$REGISTRY/webapigw --set image.tag=latest $CHARTS/webbff
+
+git clone https://github.com/microsoft/TailwindTraders-Website.git
 helm install --name web -f TailwindTraders-Website/Deploy/helm/gvalues.yaml --set ingress.protocol=http --set ingress.hosts={$INGRESS} --set image.repository=$REGISTRY/web --set image.tag=latest TailwindTraders-Website/Deploy/helm/web/
 
 # Copy website images to storage
