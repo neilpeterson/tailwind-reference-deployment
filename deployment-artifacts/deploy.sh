@@ -1,8 +1,11 @@
 #!/bin/bash
 set -e
 
+# Tailwind repositories
+BACKEND=https://github.com/microsoft/TailwindTraders-Backend.git
+
 # Values from Bootstrap Template
-AKS_TEMPALTE=TailwindTraders-Backend/Deploy/deployment.json
+AKS_TEMPLATE=TailwindTraders-Backend/Deploy/deployment.json
 CHARTS=TailwindTraders-Backend/Deploy/helm
 CLIENT_ID=$CLIENT_ID
 HELM_SCRIPT=TailwindTraders-Backend/Deploy/Generate-Config.ps1
@@ -15,13 +18,20 @@ SERVICE_ACCOUNT=TailwindTraders-Backend/Deploy/helm/ttsa.yaml
 SERVICE_PATH=TailwindTraders-Backend/Source/Services
 VALUES=../../../test123.yaml
 
-# Get backend code
-git clone https://github.com/neilpeterson/TailwindTraders-Backend.git
+# SQL Server Credentials
+SQL_ADMIN=sqladmin
+SQL_PASSWORD=Password12
 
-# Deploy backend infrastructure
+# Get backend code
+printf "\n*** Clone Tailwind Backend Repository... ***\n"
+git clone $BACKEND
+
+# Deploy backend infrastructure (ACR, Storage Account, AKS, website, PostgreSQL, SQL Server, Cosmos, MongoDB )
 printf "\n*** Deploying resources: this will take a few minutes... ***\n"
 
-az group deployment create -g $RESOURCE_GROUP_NAME --template-file $AKS_TEMPALTE --parameters servicePrincipalId=$CLIENT_ID servicePrincipalSecret=$SECRET sqlServerAdministratorLogin=sqladmin sqlServerAdministratorLoginPassword=Password12 aksVersion=1.13.5 pgversion=10
+az group deployment create -g $RESOURCE_GROUP_NAME --template-file $AKS_TEMPLATE \
+  --parameters servicePrincipalId=$CLIENT_ID servicePrincipalSecret=$SECRET $SQL_ADMIN=sqladmin \
+    sqlServerAdministratorLoginPassword=$SQL_PASSWORD aksVersion=1.13.5 pgversion=10
 
 # Install Helm on Kubernetes cluster
 printf "\n*** Installing Tiller on Kubernets cluster... ***\n"
@@ -32,13 +42,12 @@ kubectl apply -f https://raw.githubusercontent.com/Azure/helm-charts/master/docs
 helm init --service-account tiller
 
 # Create postgres DB, Disable SSL, and set Firewall
-# I think we can move this to ARM Template
 printf "\n*** Create stockdb Postgres database... ***\n"
-
 POSTGRES=$(az postgres server list --resource-group $RESOURCE_GROUP_NAME --query [0].name -o tsv)
 az postgres db create -g $RESOURCE_GROUP_NAME -s $POSTGRES -n stockdb
 az postgres server update --resource-group $RESOURCE_GROUP_NAME --name $POSTGRES --ssl-enforcement Disabled
-az postgres server firewall-rule create --resource-group $RESOURCE_GROUP_NAME --server-name $POSTGRES --name AllowAllAzureIps --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0
+az postgres server firewall-rule create --resource-group $RESOURCE_GROUP_NAME \
+  --server-name $POSTGRES --name AllowAllAzureIps --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0
 
 # Create Helm values file
 printf "\n*** Create Helm values file... ***\n"
