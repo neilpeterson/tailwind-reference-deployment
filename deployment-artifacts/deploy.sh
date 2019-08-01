@@ -30,8 +30,8 @@ git clone $BACKEND
 printf "\n*** Deploying resources: this will take a few minutes... ***\n"
 
 az group deployment create -g $RESOURCE_GROUP_NAME --template-file $AKS_TEMPLATE \
-  --parameters servicePrincipalId=$CLIENT_ID servicePrincipalSecret=$SECRET $SQL_ADMIN=sqladmin \
-    sqlServerAdministratorLoginPassword=$SQL_PASSWORD aksVersion=1.13.5 pgversion=10
+  --parameters servicePrincipalId=$CLIENT_ID servicePrincipalSecret=$SECRET $sqladmin=$SQL_ADMIN \
+  sqlServerAdministratorLoginPassword=$SQL_PASSWORD aksVersion=1.13.5 pgversion=10
 
 # Install Helm on Kubernetes cluster
 printf "\n*** Installing Tiller on Kubernets cluster... ***\n"
@@ -51,67 +51,17 @@ az postgres server firewall-rule create --resource-group $RESOURCE_GROUP_NAME \
 
 # Create Helm values file
 printf "\n*** Create Helm values file... ***\n"
-
 pwsh $HELM_SCRIPT -resourceGroup $RESOURCE_GROUP_NAME -sqlPwd Password12 -outputFile test123.yaml
 
 # Create Kubernetes / ACR secrets
-printf "\n*** Create ACR secrets in Kubernetes... ***\n"
+# printf "\n*** Create ACR secrets in Kubernetes... ***\n"
 
-ACR=$(az acr list -g $RESOURCE_GROUP_NAME --query [0].name -o tsv)
-pwsh $SECRETS_SCRIPT -resourceGroup $RESOURCE_GROUP_NAME -acrName $ACR
+# ACR=$(az acr list -g $RESOURCE_GROUP_NAME --query [0].name -o tsv)
+# pwsh $SECRETS_SCRIPT -resourceGroup $RESOURCE_GROUP_NAME -acrName $ACR
 
 # Create Kubernetes Service Account
 printf "\n*** Create Helm service account in Kubernetes... ***\n"
-
 kubectl apply -f $SERVICE_ACCOUNT
-
-# Use ACR to build and push contianer images
-# These are not beeing used due to build issue
-# I've left two working examples as POC
-
-# Build and push cart.api
-# cd $SERVICE_PATH/Tailwind.Traders.Cart.Api
-# az acr build -r $ACR -t cart.api .
-
-# # Build and push coupon.d
-# cd ../Tailwind.Traders.Coupon.Api
-# az acr build -r $ACR -t coupon.api .
-
-# Build and push image-classifier.api
-# cd ../Tailwind.Traders.ImageClassifier.Api
-# az acr build -r $ACR -t image-classifier.api .
-
-# # Build and push login.api
-# cd ../Tailwind.Traders.Login.Api
-# az acr build -r $ACR -t login.api .
-
-# # Build and push popular-product.api
-# cd ../Tailwind.Traders.PopularProduct.Api
-# az acr build -r $ACR -t popular-product.api .
-
-# # Build and push product-visits.function
-# cd ../Tailwind.Traders.Visits.Function
-# az acr build -r $ACR -t product-visits.function .
-
-# # Build and push product.api
-# cd ../Tailwind.Traders.Product.Api
-# az acr build -r $ACR -t product.api .
-
-# # Build and push profile.api
-# cd ../Tailwind.Traders.Profile.Api
-# az acr build -r $ACR -t profile.api .
-
-# # Build and push stock.api
-# cd ../Tailwind.Traders.Stock.Api
-# az acr build -r $ACR -t stock.api .
-
-# # Build and push mobileapigw
-# cd ../../ApiGWs/Tailwind.Traders.Bff/
-# az acr build -r $ACR -t mobileapigw .
-
-# # Build and push webapigw
-# cd cd ../Tailwind.Traders.WebBff/
-# az acr build -r $ACR -t webapigw .
 
 # Deploy application to Kubernetes
 printf "\n***Deplpying applications to Kubernetes.***\n"
@@ -129,13 +79,12 @@ helm install --name my-tt-login -f $VALUES --set ingress.hosts={$INGRESS} --set 
 helm install --name my-tt-mobilebff -f $VALUES --set ingress.hosts={$INGRESS} --set image.repository=$REGISTRY/mobileapigw --set image.tag=latest $CHARTS/mobilebff
 helm install --name my-tt-webbff -f $VALUES --set ingress.hosts={$INGRESS} --set image.repository=$REGISTRY/webapigw --set image.tag=latest $CHARTS/webbff
 
-# Deploy Images
+# Deploy website Images
 printf "\n***Copying application images (graphics) to Azure storage.***\n"
 
 STORAGE=$(az storage account list -g $RESOURCE_GROUP_NAME -o table --query  [].name -o tsv)
 BLOB_ENDPOINT=$(az storage account list -g $RESOURCE_GROUP_NAME --query [].primaryEndpoints.blob -o tsv)
 CONNECTION_STRING=$(az storage account show-connection-string -n $STORAGE -g $RESOURCE_GROUP_NAME -o tsv)
-
 az storage container create --name "coupon-list" --public-access blob --connection-string $CONNECTION_STRING
 az storage container create --name "product-detail" --public-access blob --connection-string $CONNECTION_STRING
 az storage container create --name "product-list" --public-access blob --connection-string $CONNECTION_STRING
