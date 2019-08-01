@@ -16,7 +16,7 @@ SERVICE_PATH=TailwindTraders-Backend/Source/Services
 VALUES=../../../test123.yaml
 
 # Get backend code
-git clone https://github.com/microsoft/TailwindTraders-Backend.git
+git clone https://github.com/neilpeterson/TailwindTraders-Backend.git
 
 # Deploy backend infrastructure
 printf "\n*** Deploying resources: this will take a few minutes... ***\n"
@@ -32,7 +32,6 @@ kubectl apply -f https://raw.githubusercontent.com/Azure/helm-charts/master/docs
 helm init --service-account tiller
 
 # Create postgres DB, Disable SSL, and set Firewall
-# I think we can move this to ARM Template
 printf "\n*** Create stockdb Postgres database... ***\n"
 
 POSTGRES=$(az postgres server list --resource-group $RESOURCE_GROUP_NAME --query [0].name -o tsv)
@@ -46,63 +45,15 @@ printf "\n*** Create Helm values file... ***\n"
 pwsh $HELM_SCRIPT -resourceGroup $RESOURCE_GROUP_NAME -sqlPwd Password12 -outputFile test123.yaml
 
 # Create Kubernetes / ACR secrets
-printf "\n*** Create ACR secrets in Kubernetes... ***\n"
+# printf "\n*** Create ACR secrets in Kubernetes... ***\n"
 
-ACR=$(az acr list -g $RESOURCE_GROUP_NAME --query [0].name -o tsv)
-pwsh $SECRETS_SCRIPT -resourceGroup $RESOURCE_GROUP_NAME -acrName $ACR
+# ACR=$(az acr list -g $RESOURCE_GROUP_NAME --query [0].name -o tsv)
+# pwsh $SECRETS_SCRIPT -resourceGroup $RESOURCE_GROUP_NAME -acrName $ACR
 
 # Create Kubernetes Service Account
 printf "\n*** Create Helm service account in Kubernetes... ***\n"
-
 kubectl apply -f $SERVICE_ACCOUNT
 
-# Use ACR to build and push contianer images
-# These are not beeing used due to build issue
-# I've left two working examples as POC
-
-# Build and push cart.api
-# cd $SERVICE_PATH/Tailwind.Traders.Cart.Api
-# az acr build -r $ACR -t cart.api .
-
-# # Build and push coupon.d
-# cd ../Tailwind.Traders.Coupon.Api
-# az acr build -r $ACR -t coupon.api .
-
-# Build and push image-classifier.api
-# cd ../Tailwind.Traders.ImageClassifier.Api
-# az acr build -r $ACR -t image-classifier.api .
-
-# # Build and push login.api
-# cd ../Tailwind.Traders.Login.Api
-# az acr build -r $ACR -t login.api .
-
-# # Build and push popular-product.api
-# cd ../Tailwind.Traders.PopularProduct.Api
-# az acr build -r $ACR -t popular-product.api .
-
-# # Build and push product-visits.function
-# cd ../Tailwind.Traders.Visits.Function
-# az acr build -r $ACR -t product-visits.function .
-
-# # Build and push product.api
-# cd ../Tailwind.Traders.Product.Api
-# az acr build -r $ACR -t product.api .
-
-# # Build and push profile.api
-# cd ../Tailwind.Traders.Profile.Api
-# az acr build -r $ACR -t profile.api .
-
-# # Build and push stock.api
-# cd ../Tailwind.Traders.Stock.Api
-# az acr build -r $ACR -t stock.api .
-
-# # Build and push mobileapigw
-# cd ../../ApiGWs/Tailwind.Traders.Bff/
-# az acr build -r $ACR -t mobileapigw .
-
-# # Build and push webapigw
-# cd cd ../Tailwind.Traders.WebBff/
-# az acr build -r $ACR -t webapigw .
 
 # Deploy application to Kubernetes
 printf "\n***Deplpying applications to Kubernetes.***\n"
