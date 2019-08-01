@@ -16,7 +16,7 @@ SECRET=$SECRET
 SECRETS_SCRIPT=TailwindTraders-Backend/Deploy/Create-Secret.ps1
 SERVICE_ACCOUNT=TailwindTraders-Backend/Deploy/helm/ttsa.yaml
 SERVICE_PATH=TailwindTraders-Backend/Source/Services
-VALUES=../../../test123.yaml
+VALUES=../../../helm_values.yaml
 
 # SQL Server Credentials
 SQL_ADMIN=sqladmin
@@ -51,7 +51,7 @@ az postgres server firewall-rule create --resource-group $RESOURCE_GROUP_NAME \
 
 # Create Helm values file
 printf "\n*** Create Helm values file... ***\n"
-pwsh $HELM_SCRIPT -resourceGroup $RESOURCE_GROUP_NAME -sqlPwd Password12 -outputFile test123.yaml
+pwsh $HELM_SCRIPT -resourceGroup $RESOURCE_GROUP_NAME -sqlPwd $SQL_PASSWORD -outputFile helm_values.yaml
 
 # Create Kubernetes / ACR secrets
 # printf "\n*** Create ACR secrets in Kubernetes... ***\n"
