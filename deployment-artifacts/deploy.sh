@@ -17,6 +17,7 @@ VALUES=../../../values.yaml
 # Get backend code
 printf "\n*** Cloning Tailwind code repository... ***\n"
 
+# Issue to fix with upstream: https://github.com/microsoft/TailwindTraders-Backend/blob/master/Deploy/Generate-Config.ps1#L92
 git clone https://github.com/neilpeterson/TailwindTraders-Backend.git
 
 # Deploy backend infrastructure
@@ -68,6 +69,7 @@ helm install --name my-tt-login -f $VALUES --set ingress.hosts={$INGRESS} --set 
 helm install --name my-tt-mobilebff -f $VALUES --set ingress.hosts={$INGRESS} --set image.repository=$REGISTRY/mobileapigw --set image.tag=latest $CHARTS/mobilebff
 helm install --name my-tt-webbff -f $VALUES --set ingress.hosts={$INGRESS} --set image.repository=$REGISTRY/webapigw --set image.tag=latest $CHARTS/webbff
 
+# Issue to fix with upstream: https://github.com/microsoft/TailwindTraders-Website/commit/0ab7e92f437c45fd6ac5c7c489e88977fd1f6ebc
 git clone https://github.com/neilpeterson/TailwindTraders-Website.git
 helm install --name web -f TailwindTraders-Website/Deploy/helm/gvalues.yaml --set ingress.protocol=http --set ingress.hosts={$INGRESS} --set image.repository=$REGISTRY/web --set image.tag=latest TailwindTraders-Website/Deploy/helm/web/
 
@@ -88,11 +90,9 @@ az storage blob upload-batch --destination $BLOB_ENDPOINT --destination profiles
 
 # Notes
 echo "*************** Connection Information ***************"
-echo "******************************************************"
 echo "The Tailwind Traders Website can be accessed at:"
 echo "http://$INGRESS"
 echo ""
 echo "Run the following to connect to the AKS cluster:"
 echo "az aks get-credentials --name $AKS_CLUSTER --resource-group $RESOURCE_GROUP_NAME --admin"
-echo "******************************************************"
 echo "******************************************************"
