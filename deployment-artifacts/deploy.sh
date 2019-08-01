@@ -45,15 +45,14 @@ printf "\n*** Create Helm values file... ***\n"
 pwsh $HELM_SCRIPT -resourceGroup $RESOURCE_GROUP_NAME -sqlPwd Password12 -outputFile test123.yaml
 
 # Create Kubernetes / ACR secrets
-# printf "\n*** Create ACR secrets in Kubernetes... ***\n"
+printf "\n*** Create ACR secrets in Kubernetes... ***\n"
 
-# ACR=$(az acr list -g $RESOURCE_GROUP_NAME --query [0].name -o tsv)
-# pwsh $SECRETS_SCRIPT -resourceGroup $RESOURCE_GROUP_NAME -acrName $ACR
+ACR=$(az acr list -g $RESOURCE_GROUP_NAME --query [0].name -o tsv)
+pwsh $SECRETS_SCRIPT -resourceGroup $RESOURCE_GROUP_NAME -acrName $ACR
 
 # Create Kubernetes Service Account
 printf "\n*** Create Helm service account in Kubernetes... ***\n"
 kubectl apply -f $SERVICE_ACCOUNT
-
 
 # Deploy application to Kubernetes
 printf "\n***Deplpying applications to Kubernetes.***\n"
