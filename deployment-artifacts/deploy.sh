@@ -90,10 +90,10 @@ az storage blob upload-batch --destination $BLOB_ENDPOINT --destination profiles
 # Deploy Website
 git clone https://github.com/neilpeterson/TailwindTraders-Website.git
 
-# Build and push web
-cd TailwindTraders-Website/Source/Tailwind.Traders.Web
-az acr build -r $ACR -t web .
-cd ../../../
+# # Build and push web
+# cd TailwindTraders-Website/Source/Tailwind.Traders.Web
+# az acr build -r $ACR -t web .
+# cd ../../../
 
 # Create web Helm release
 helm install --name web -f TailwindTraders-Website/Deploy/helm/gvalues.yaml --set ingress.protocol=http --set ingress.hosts={$INGRESS} --set image.repository=$REGISTRY/web --set image.tag=latest  TailwindTraders-Website/Deploy/helm/web/
