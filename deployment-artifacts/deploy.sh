@@ -10,18 +10,22 @@ IMAGES=TailwindTraders-Backend/Deploy/tt-images
 REGISTRY=neilpeterson
 RESOURCE_GROUP_NAME=$RESOURCE_GROUP_NAME
 SECRET=$SECRET
-SECRETS_SCRIPT=TailwindTraders-Backend/Deploy/Create-Secret.ps1
 SERVICE_ACCOUNT=TailwindTraders-Backend/Deploy/helm/ttsa.yaml
 SERVICE_PATH=TailwindTraders-Backend/Source/Services
-VALUES=../../../test123.yaml
+VALUES=../../../values.yaml
 
 # Get backend code
+printf "\n*** Cloning Tailwind code repository... ***\n"
+
 git clone https://github.com/neilpeterson/TailwindTraders-Backend.git
 
 # Deploy backend infrastructure
 printf "\n*** Deploying resources: this will take a few minutes... ***\n"
 
-az group deployment create -g $RESOURCE_GROUP_NAME --template-file $AKS_TEMPALTE --parameters servicePrincipalId=$CLIENT_ID servicePrincipalSecret=$SECRET sqlServerAdministratorLogin=sqladmin sqlServerAdministratorLoginPassword=Password12 aksVersion=1.13.5 pgversion=10
+az group deployment create -g $RESOURCE_GROUP_NAME --template-file $AKS_TEMPALTE \
+  --parameters servicePrincipalId=$CLIENT_ID servicePrincipalSecret=$SECRET \
+  sqlServerAdministratorLogin=sqladmin sqlServerAdministratorLoginPassword=Password12 \
+  aksVersion=1.13.5 pgversion=10
 
 # Install Helm on Kubernetes cluster
 printf "\n*** Installing Tiller on Kubernets cluster... ***\n"
@@ -42,23 +46,17 @@ az postgres server firewall-rule create --resource-group $RESOURCE_GROUP_NAME --
 # Create Helm values file
 printf "\n*** Create Helm values file... ***\n"
 
-pwsh $HELM_SCRIPT -resourceGroup $RESOURCE_GROUP_NAME -sqlPwd Password12 -outputFile test123.yaml
-
-# Create Kubernetes / ACR secrets
-# printf "\n*** Create ACR secrets in Kubernetes... ***\n"
-
-# ACR=$(az acr list -g $RESOURCE_GROUP_NAME --query [0].name -o tsv)
-# pwsh $SECRETS_SCRIPT -resourceGroup $RESOURCE_GROUP_NAME -acrName $ACR
+pwsh $HELM_SCRIPT -resourceGroup $RESOURCE_GROUP_NAME -sqlPwd Password12 -outputFile values.yaml
 
 # Create Kubernetes Service Account
 printf "\n*** Create Helm service account in Kubernetes... ***\n"
+
 kubectl apply -f $SERVICE_ACCOUNT
 
 # Deploy application to Kubernetes
 printf "\n***Deplpying applications to Kubernetes.***\n"
 
 INGRESS=$(az aks show -n $AKS_CLUSTER -g $RESOURCE_GROUP_NAME --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName -o tsv)
-
 helm install --name my-tt-product -f $VALUES --set az.productvisitsurl=http://your-product-visits-af-here --set ingress.hosts={$INGRESS} --set image.repository=$REGISTRY/product.api --set image.tag=latest $CHARTS/products-api
 helm install --name my-tt-coupon -f $VALUES --set ingress.hosts={$INGRESS} --set image.repository=$REGISTRY/coupon.api --set image.tag=latest $CHARTS/coupons-api
 helm install --name my-tt-profile -f $VALUES --set ingress.hosts={$INGRESS} --set image.repository=$REGISTRY/profile.api --set image.tag=latest $CHARTS/profiles-api
@@ -69,6 +67,7 @@ helm install --name my-tt-cart -f $VALUES --set ingress.hosts={$INGRESS} --set i
 helm install --name my-tt-login -f $VALUES --set ingress.hosts={$INGRESS} --set image.repository=$REGISTRY/login.api --set image.tag=latest $CHARTS/login-api
 helm install --name my-tt-mobilebff -f $VALUES --set ingress.hosts={$INGRESS} --set image.repository=$REGISTRY/mobileapigw --set image.tag=latest $CHARTS/mobilebff
 helm install --name my-tt-webbff -f $VALUES --set ingress.hosts={$INGRESS} --set image.repository=$REGISTRY/webapigw --set image.tag=latest $CHARTS/webbff
+helm install --name web -f TailwindTraders-Website/Deploy/helm/gvalues.yaml --set ingress.protocol=http --set ingress.hosts={$INGRESS} --set image.repository=$REGISTRY/web --set image.tag=latest TailwindTraders-Website/Deploy/helm/web/
 
 # Deploy Images
 printf "\n***Copying application images (graphics) to Azure storage.***\n"
@@ -76,7 +75,6 @@ printf "\n***Copying application images (graphics) to Azure storage.***\n"
 STORAGE=$(az storage account list -g $RESOURCE_GROUP_NAME -o table --query  [].name -o tsv)
 BLOB_ENDPOINT=$(az storage account list -g $RESOURCE_GROUP_NAME --query [].primaryEndpoints.blob -o tsv)
 CONNECTION_STRING=$(az storage account show-connection-string -n $STORAGE -g $RESOURCE_GROUP_NAME -o tsv)
-
 az storage container create --name "coupon-list" --public-access blob --connection-string $CONNECTION_STRING
 az storage container create --name "product-detail" --public-access blob --connection-string $CONNECTION_STRING
 az storage container create --name "product-list" --public-access blob --connection-string $CONNECTION_STRING
@@ -85,17 +83,6 @@ az storage blob upload-batch --destination $BLOB_ENDPOINT --destination coupon-l
 az storage blob upload-batch --destination $BLOB_ENDPOINT --destination product-detail --source $IMAGES/product-detail --account-name $STORAGE
 az storage blob upload-batch --destination $BLOB_ENDPOINT --destination product-list --source $IMAGES/product-list --account-name $STORAGE
 az storage blob upload-batch --destination $BLOB_ENDPOINT --destination profiles-list --source $IMAGES/profiles-list --account-name $STORAGE
-
-# Deploy Website
-git clone https://github.com/neilpeterson/TailwindTraders-Website.git
-
-# Build and push web
-# cd TailwindTraders-Website/Source/Tailwind.Traders.Web
-# az acr build -r $ACR -t web .
-# cd ../../../
-
-# Create web Helm release
-helm install --name web -f TailwindTraders-Website/Deploy/helm/gvalues.yaml --set ingress.protocol=http --set ingress.hosts={$INGRESS} --set image.repository=$REGISTRY/web --set image.tag=latest TailwindTraders-Website/Deploy/helm/web/
 
 # Notes
 echo "*************** Connection Information ***************"
