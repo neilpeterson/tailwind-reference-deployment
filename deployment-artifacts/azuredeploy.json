@@ -65,75 +65,6 @@
 			}
 		},
 		{
-			"type": "Microsoft.ContainerInstance/containerGroups",
-			"apiVersion": "2018-10-01",
-			"name": "[variables('aciName')]",
-			"location": "[resourceGroup().location]",
-			"dependsOn": [
-				"[resourceId('Microsoft.Authorization/roleAssignments', variables('bootstrapRoleAssignmentId'))]"
-			],
-			"identity": {
-				"type": "UserAssigned",
-				"userAssignedIdentities": {
-					"[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]": {}
-				}
-			},
-			"properties": {
-				"osType": "Linux",
-				"restartPolicy": "Never",
-				"containers": [{
-					"name": "[variables('containerName')]",
-					"properties": {
-						"image": "[variables('deploymentImage')]",
-						"command": [
-							"/bin/sh",
-							"-c",
-							"sh /boot-strap.sh"
-						],
-						"resources": {
-							"requests": {
-								"cpu": 2,
-								"memoryInGB": 4
-							}
-						},
-						"environmentVariables": [{
-								"name": "RESOURCE_GROUP_NAME",
-								"secureValue": "[variables('rgname')]"
-							},
-							{
-								"name": "SOURCE_REPOSITORY",
-								"secureValue": "[variables('sourceRepo')]"
-							},
-							{
-								"name": "ENTRYPOINT",
-								"secureValue": "[variables('entrypoint')]"
-							},
-							{
-								"name": "MANAGED_IDENTITY",
-								"secureValue": "[concat(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')))]"
-							},
-							{
-								"name": "SESSION_CODE",
-								"secureValue": "[variables('sessionCode')]"
-							},
-							{
-								"name": "CLIENT_ID",
-								"secureValue": "[parameters('servicePrincipalId')]"
-							},
-							{
-								"name": "SECRET",
-								"secureValue": "[parameters('servicePrincipalSecret')]"
-							},
-							{
-								"name": "USER_ID",
-								"secureValue": "[parameters('emailAddress')]"
-							}
-						]
-					}
-				}]
-			}
-		},
-		{
 			"type": "Microsoft.Storage/storageAccounts",
 			"sku": {
 			  "name": "Standard_LRS"
@@ -427,7 +358,85 @@
 				]
 			  }
 			}
-		  }
+		  },
+		  {
+			"type": "Microsoft.ContainerInstance/containerGroups",
+			"apiVersion": "2018-10-01",
+			"name": "[variables('aciName')]",
+			"location": "[resourceGroup().location]",
+			"dependsOn": [
+				"[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]",
+				"[resourceId('Microsoft.Authorization/roleAssignments', variables('bootstrapRoleAssignmentId'))]",
+				"[resourceId('Microsoft.Web/sites', variables('function_name'))]",
+				"[resourceId('Microsoft.DBforPostgreSQL/servers', variables('pg_name'))]",
+				"[concat('Microsoft.Resources/deployments/', 'WorkspaceDeployment')]",
+				"[resourceId('Microsoft.Storage/storageAccounts', variables('storage_name'))]",
+				"[concat('Microsoft.Sql/servers/', variables('sqlserver_name'))]",
+				"[concat('Microsoft.Sql/servers/', variables('sqlserver_name'), '/databases/', 'Products')]",
+				"[concat('Microsoft.Sql/servers/', variables('sqlserver_name'), '/databases/', 'Profiles')]",
+				"[concat('Microsoft.Sql/servers/', variables('sqlserver_name'), '/databases/', 'PopularProducts')]"
+			],
+			"identity": {
+				"type": "UserAssigned",
+				"userAssignedIdentities": {
+					"[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]": {}
+				}
+			},
+			"properties": {
+				"osType": "Linux",
+				"restartPolicy": "Never",
+				"containers": [{
+					"name": "[variables('containerName')]",
+					"properties": {
+						"image": "[variables('deploymentImage')]",
+						"command": [
+							"/bin/sh",
+							"-c",
+							"sh /boot-strap.sh"
+						],
+						"resources": {
+							"requests": {
+								"cpu": 2,
+								"memoryInGB": 4
+							}
+						},
+						"environmentVariables": [{
+								"name": "RESOURCE_GROUP_NAME",
+								"secureValue": "[variables('rgname')]"
+							},
+							{
+								"name": "SOURCE_REPOSITORY",
+								"secureValue": "[variables('sourceRepo')]"
+							},
+							{
+								"name": "ENTRYPOINT",
+								"secureValue": "[variables('entrypoint')]"
+							},
+							{
+								"name": "MANAGED_IDENTITY",
+								"secureValue": "[concat(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')))]"
+							},
+							{
+								"name": "SESSION_CODE",
+								"secureValue": "[variables('sessionCode')]"
+							},
+							{
+								"name": "CLIENT_ID",
+								"secureValue": "[parameters('servicePrincipalId')]"
+							},
+							{
+								"name": "SECRET",
+								"secureValue": "[parameters('servicePrincipalSecret')]"
+							},
+							{
+								"name": "USER_ID",
+								"secureValue": "[parameters('emailAddress')]"
+							}
+						]
+					}
+				}]
+			}
+		},
 	],
 	"outputs": {}
 }

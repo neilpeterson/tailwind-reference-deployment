@@ -29,7 +29,7 @@ git clone https://github.com/neilpeterson/TailwindTraders-Backend.git
 #   aksVersion=1.13.5 pgversion=10
 
 # Install AKS
-az ake create --name test123 --resourceGroup $RESOURCE_GROUP_NAME
+az aks create --name test123 --resourceGroup $RESOURCE_GROUP_NAME
 
 # Install Helm on Kubernetes cluster
 printf "\n*** Installing Tiller on Kubernets cluster... ***\n"
