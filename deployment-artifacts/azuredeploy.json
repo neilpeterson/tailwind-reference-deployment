@@ -3,20 +3,26 @@
 	"contentVersion": "1.0.0.0",
 	"parameters": {
 		"servicePrincipalId": {
-			"type": "string"
+			"type": "string",
+			"metadata": {
+				"description": "The service principle application id is used when deploying the Azure Kubernetes Service cluster."
+			  }
 		},
 		"servicePrincipalSecret": {
-			"type": "securestring"
-		},
-		"FQDNPrefix": {
-			"type": "string"
+			"type": "securestring",
+			"metadata": {
+				"description": "The service principle password is used when deploying the Azure Kubernetes Service cluster."
+			  }
 		},
 		"emailAddress": {
-			"type": "string"
+			"type": "string",
+			"metadata": {
+				"description": "This value will be tagged on the resource group for identification purposes."
+			  }
 		}
 	},
 	"variables": {
-		"aciName": "[concat(parameters('FQDNPrefix'), '-bootstrap')]",
+		"aciName": "bootstrap-container",
 		"rgname": "[resourceGroup().name]",
 		"bootstrapRoleAssignmentId": "[guid(concat(resourceGroup().id, 'contributor'))]",
 		"identityName": "bootstrap-creds",
