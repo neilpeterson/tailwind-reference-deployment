@@ -18,8 +18,8 @@ tailwindChartValuesScript=TailwindTraders-Backend/Deploy/Generate-Config.ps1
 tailwindChartValues=../../../values.yaml
 tailwindWebImages=TailwindTraders-Backend/Deploy/tt-images
 
-# SERVICE_ACCOUNT=TailwindTraders-Backend/Deploy/helm/ttsa.yaml
-# SERVICE_PATH=TailwindTraders-Backend/Source/Services
+SERVICE_ACCOUNT=TailwindTraders-Backend/Deploy/helm/ttsa.yaml
+SERVICE_PATH=TailwindTraders-Backend/Source/Services
 
 # Get backend code
 printf "\n*** Cloning Tailwind code repository... ***\n"
@@ -56,10 +56,10 @@ printf "\n*** Create Helm values file... ***\n"
 
 pwsh $tailwindChartValuesScript -resourceGroup $azureResourceGroup -sqlPwd Password12 -outputFile values.yaml
 
-# # Create Kubernetes Service Account
-# printf "\n*** Create Helm service account in Kubernetes... ***\n"
+# Create Kubernetes Service Account
+printf "\n*** Create Helm service account in Kubernetes... ***\n"
 
-# kubectl apply -f $SERVICE_ACCOUNT
+kubectl apply -f $SERVICE_ACCOUNT
 
 # Deploy application to Kubernetes
 printf "\n***Deplpying applications to Kubernetes.***\n"
