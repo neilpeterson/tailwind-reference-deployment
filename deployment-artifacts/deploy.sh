@@ -20,13 +20,13 @@ printf "\n*** Cloning Tailwind code repository... ***\n"
 # Issue to fix with upstream: https://github.com/microsoft/TailwindTraders-Backend/blob/master/Deploy/Generate-Config.ps1#L92
 git clone https://github.com/neilpeterson/TailwindTraders-Backend.git
 
-# # Deploy backend infrastructure
-# printf "\n*** Deploying resources: this will take a few minutes... ***\n"
+# Deploy backend infrastructure
+printf "\n*** Deploying resources: this will take a few minutes... ***\n"
 
-# az group deployment create -g $RESOURCE_GROUP_NAME --template-file $AKS_TEMPALTE \
-#   --parameters servicePrincipalId=$CLIENT_ID servicePrincipalSecret=$SECRET \
-#   sqlServerAdministratorLogin=sqladmin sqlServerAdministratorLoginPassword=Password12 \
-#   aksVersion=1.13.5 pgversion=10
+az group deployment create -g $RESOURCE_GROUP_NAME --template-file $AKS_TEMPALTE \
+  --parameters servicePrincipalId=$CLIENT_ID servicePrincipalSecret=$SECRET \
+  sqlServerAdministratorLogin=sqladmin sqlServerAdministratorLoginPassword=Password12 \
+  aksVersion=1.13.5 pgversion=10
 
 # Install Helm on Kubernetes cluster
 printf "\n*** Installing Tiller on Kubernets cluster... ***\n"
