@@ -419,7 +419,8 @@
 				"[concat('Microsoft.Sql/servers/', variables('sqlserver_name'))]",
 				"[concat('Microsoft.Sql/servers/', variables('sqlserver_name'), '/databases/', 'Products')]",
 				"[concat('Microsoft.Sql/servers/', variables('sqlserver_name'), '/databases/', 'Profiles')]",
-				"[concat('Microsoft.Sql/servers/', variables('sqlserver_name'), '/databases/', 'PopularProducts')]"
+				"[concat('Microsoft.Sql/servers/', variables('sqlserver_name'), '/databases/', 'PopularProducts')]",
+				"[resourceId('Microsoft.ContainerService/managedClusters', variables('aks_name'))]"
 			],
 			"identity": {
 				"type": "UserAssigned",
