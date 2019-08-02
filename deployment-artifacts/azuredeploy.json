@@ -23,6 +23,8 @@
 	},
 	"variables": {
 		"storage_name": "[concat('ttstorage',uniqueString(resourceGroup().id))]",
+		"aks_name": "[concat('tailwindtradersaks',uniqueString(resourceGroup().id))]",
+		"aks_version": "1.13.5",
 		"function_name": "[concat('ttfunction',uniqueString(resourceGroup().id))]",
 		"pg_name": "[concat('ttpg',uniqueString(resourceGroup().id))]",
 		"pgversion": 10,
@@ -78,6 +80,49 @@
 			  "supportsHttpsTrafficOnly": false
 			},
 			"dependsOn": []
+		  },
+		  {
+			"type": "Microsoft.ContainerService/managedClusters",
+			"name": "[variables('aks_name')]",
+			"apiVersion": "2019-02-01",
+			"location": "[resourceGroup().location]",
+			"tags": {},
+			"properties": {
+			  "kubernetesVersion": "[variables('aks_version')]",
+			  "enableRBAC": true,
+			  "dnsPrefix": "[variables('aks_name')]",
+			  "addonProfiles": {
+				"httpApplicationRouting": {
+				  "enabled": true
+				},
+				"omsagent": {
+				  "enabled": true,
+				  "config": {
+					"logAnalyticsWorkspaceResourceID": "[variables('omsWorkspaceId')]"
+				  }
+				}
+			  },
+			  "agentPoolProfiles": [
+				{
+				  "name": "agentpool",
+				  "count": 2,
+				  "vmSize": "Standard_DS2_v2",
+				  "osType": "Linux",
+				  "osDiskSizeGB": 0,
+				  "storageProfile": "ManagedDisks"
+				}
+			  ],
+			  "servicePrincipalProfile": {
+				"ClientId": "[parameters('servicePrincipalId')]",
+				"Secret": "[parameters('servicePrincipalSecret')]"
+			  },
+			  "networkProfile": {
+				"networkPlugin": "kubenet"
+			  }
+			},
+			"dependsOn": [
+			  "[concat('Microsoft.Resources/deployments/', 'WorkspaceDeployment')]"
+			]
 		  },
 		  {
 			"type": "Microsoft.Web/sites",
