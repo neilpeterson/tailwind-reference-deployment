@@ -7,7 +7,7 @@ azureClientSecret=$SECRET
 sqlServerUser=sqladmin
 sqlServePassword=Password12
 
-# Azure and Image location
+# Azure and container image location
 azureResourceGroup=$RESOURCE_GROUP_NAME
 containerRegistry=neilpeterson
 
@@ -17,9 +17,7 @@ tailwindCharts=TailwindTraders-Backend/Deploy/helm
 tailwindChartValuesScript=TailwindTraders-Backend/Deploy/Generate-Config.ps1
 tailwindChartValues=../../../values.yaml
 tailwindWebImages=TailwindTraders-Backend/Deploy/tt-images
-
-SERVICE_ACCOUNT=TailwindTraders-Backend/Deploy/helm/ttsa.yaml
-# SERVICE_PATH=TailwindTraders-Backend/Source/Services
+tailwindServiceAccount=TailwindTraders-Backend/Deploy/helm/ttsa.yaml
 
 # Get backend code
 printf "\n*** Cloning Tailwind code repository... ***\n"
@@ -59,7 +57,7 @@ pwsh $tailwindChartValuesScript -resourceGroup $azureResourceGroup -sqlPwd Passw
 # Create Kubernetes Service Account
 printf "\n*** Create Helm service account in Kubernetes... ***\n"
 
-kubectl apply -f $SERVICE_ACCOUNT
+kubectl apply -f $tailwindServiceAccount
 
 # Deploy application to Kubernetes
 printf "\n***Deplpying applications to Kubernetes.***\n"
