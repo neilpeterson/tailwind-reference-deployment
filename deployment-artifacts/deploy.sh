@@ -59,6 +59,13 @@ printf "\n*** Create Helm service account in Kubernetes... ***\n"
 
 kubectl apply -f $tailwindServiceAccount
 
+# Cert manager / TLS encryption
+printf "\n***Installing Cert Manager + TLS support.***\n"
+
+helm install --name cert-manager --namespace kube-system  --version v0.4.1 stable/cert-manager
+$domain = $(az aks show -n $AKS_CLUSTER -g $azureResourceGroup -o json --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName | ConvertFrom-Json)
+helm install --name tls-support --set domain=$domain --set applicationName=tailwindtraders --set issuerName=letsencrypt-prod --set certName=tt-cert-prod --set environment=prod --set server=https://acme-v02.api.letsencrypt.org/directory --set certSecretName=tt-letsencrypt-prod --set issuerSecretName=letsencrypt-prod --set ingressClass=addon-http-application-routing tls-support
+
 # Deploy application to Kubernetes
 printf "\n***Deplpying applications to Kubernetes.***\n"
 
