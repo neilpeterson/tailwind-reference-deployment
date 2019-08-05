@@ -91,7 +91,11 @@ helm install --name my-tt-webbff -f $tailwindChartValues --set ingress.hosts={$I
 git clone https://github.com/neilpeterson/TailwindTraders-Website.git
 # helm install --name web -f TailwindTraders-Website/Deploy/helm/gvalues.yaml --set ingress.protocol=http --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/web --set image.tag=latest TailwindTraders-Website/Deploy/helm/web/
 # Add these values - https://github.com/neilpeterson/TailwindTraders-Backend/blob/master/Deploy/helm/tls-support/values-prod.yaml
-helm install --name web -f TailwindTraders-Backend/Deploy/helm/tls-support/values-prod.yaml --set ingress.protocol=https --set ingress.tls.secretName=tt-letsencrypt-prod --set ingress.tls.hosts={$AKS_CLUSTER} --set image.repository=$containerRegistry/web --set image.tag=latest TailwindTraders-Website/Deploy/helm/web/
+write-host "********************"
+write-host "********************"
+write-host "********************"
+sleep 20m
+# helm install --name web -f TailwindTraders-Backend/Deploy/helm/tls-support/values-prod.yaml --set ingress.protocol=https --set ingress.tls.secretName=tt-letsencrypt-prod --set ingress.tls.hosts={$AKS_CLUSTER} --set image.repository=$containerRegistry/web --set image.tag=latest TailwindTraders-Website/Deploy/helm/web/
 
 # Copy website images to storage
 printf "\n***Copying application images (graphics) to Azure storage.***\n"
