@@ -19,6 +19,12 @@ tailwindChartValues=../../../values.yaml
 tailwindWebImages=TailwindTraders-Backend/Deploy/tt-images
 tailwindServiceAccount=TailwindTraders-Backend/Deploy/helm/ttsa.yaml
 
+# Print out tail command
+printf "\n*** To tail logs, run this command... ***\n"
+echo "*************** Container logs ***************"
+echo "az container logs --name bootstrap-container --resource-group $azureResourceGroup --follow"
+echo "*************** Connection Information ***************"
+
 # Get backend code
 printf "\n*** Cloning Tailwind code repository... ***\n"
 
