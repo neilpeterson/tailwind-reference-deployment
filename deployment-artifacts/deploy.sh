@@ -74,7 +74,7 @@ echo "====="
 echo "====="
 sleep 20m
 
-$domain = $(az aks show -n $AKS_CLUSTER -g $azureResourceGroup --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName -o tsv)
+domain=$(az aks show -n $AKS_CLUSTER -g $azureResourceGroup --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName -o tsv)
 helm install --name tls-support --set domain=$domain --set applicationName=tailwindtraders --set issuerName=letsencrypt-prod --set certName=tt-cert-prod --set environment=prod --set server=https://acme-v02.api.letsencrypt.org/directory --set certSecretName=tt-letsencrypt-prod --set issuerSecretName=letsencrypt-prod --set ingressClass=addon-http-application-routing $tailwindCharts/tls-support
 
 # Deploy application to Kubernetes
