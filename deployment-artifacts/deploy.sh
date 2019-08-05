@@ -72,8 +72,6 @@ helm install --name cert-manager --namespace kube-system  --version v0.4.1 stabl
 domain=$(az aks show -n $AKS_CLUSTER -g $azureResourceGroup --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName -o tsv)
 helm install --name tls-support --set domain=$domain --set applicationName=tailwindtraders --set issuerName=letsencrypt-staging --set certName=tt-cert-staging --set environment=staging --set server=https://acme-v02.api.letsencrypt.org/directory --set certSecretName=tt-letsencrypt-staging --set issuerSecretName=letsencrypt-staging --set ingressClass=addon-http-application-routing $tailwindCharts/tls-support
 
-sleep 20m
-
 # Deploy application to Kubernetes
 printf "\n***Deplpying applications to Kubernetes.***\n"
 
