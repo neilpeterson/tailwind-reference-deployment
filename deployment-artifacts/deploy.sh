@@ -70,7 +70,7 @@ printf "\n***Installing Cert Manager + TLS support.***\n"
 
 helm install --name cert-manager --namespace kube-system  --version v0.4.1 stable/cert-manager
 domain=$(az aks show -n $AKS_CLUSTER -g $azureResourceGroup --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName -o tsv)
-helm install --name tls-support --set domain=$domain --set applicationName=tailwindtraders --set issuerName=letsencrypt-staging --set certName=tt-cert-staging --set environment=staging --set server=https://acme-v02.api.letsencrypt.org/directory --set certSecretName=tt-letsencrypt-staging --set issuerSecretName=letsencrypt-staging --set ingressClass=addon-http-application-routing $tailwindCharts/tls-support
+helm install --name tls-support --set domain=$domain --set applicationName=tailwindtraders --set issuerName=letsencrypt-prod --set certName=tt-cert-prod --set environment=prod --set server=https://acme-v02.api.letsencrypt.org/directory --set certSecretName=tt-letsencrypt-prod --set issuerSecretName=letsencrypt-prod --set ingressClass=addon-http-application-routing $tailwindCharts/tls-support
 
 # Deploy application to Kubernetes
 printf "\n***Deplpying applications to Kubernetes.***\n"
@@ -89,7 +89,8 @@ helm install --name my-tt-webbff -f $tailwindChartValues --set ingress.hosts={$I
 
 # Issue to fix with upstream: https://github.com/microsoft/TailwindTraders-Website/commit/0ab7e92f437c45fd6ac5c7c489e88977fd1f6ebc
 git clone https://github.com/neilpeterson/TailwindTraders-Website.git
-helm install --name web -f TailwindTraders-Website/Deploy/helm/gvalues.yaml --set ingress.protocol=http --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/web --set image.tag=latest TailwindTraders-Website/Deploy/helm/web/
+# helm install --name web -f TailwindTraders-Website/Deploy/helm/gvalues.yaml --set ingress.protocol=http --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/web --set image.tag=latest TailwindTraders-Website/Deploy/helm/web/
+helm install --name web -f TailwindTraders-Website/Deploy/helm/gvalues.yaml --set ingress.protocol=https --set ingress.tls[0].secretName=tt-letsencrypt-prod --set ingress.tls[0].hosts={$AKS_CLUSTER} --set image.repository=$containerRegistry/web --set image.tag=latest TailwindTraders-Website/Deploy/helm/web/
 
 # Copy website images to storage
 printf "\n***Copying application images (graphics) to Azure storage.***\n"
