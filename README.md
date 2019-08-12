@@ -8,6 +8,20 @@ In order to deploy this template, you need an Azure Service Principal. If needed
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
+## Provider registration
+
+The Tailwind Traders application uses many Azure services. In some cases, if a service has not yet been used in your subscription, a provider registration may be needed. The following commands will ensure your subscription is capable of running the Tailwind Traders application.
+
+```
+az provider register --namespace Microsoft.OperationalInsights
+az provider register --namespace Microsoft.DocumentDB
+az provider register --namespace Microsoft.DBforPostgreSQL
+az provider register --namespace Microsoft.OperationsManagement
+az provider register --namespace Microsoft.ContainerService
+az provider register --namespace Microsoft.Sql
+az provider register --namespace Microsoft.ContainerRegistry
+```
+
 ## Connect to deployment
 
 To validate that the deployment has completed, select the Azure Container Instance.
