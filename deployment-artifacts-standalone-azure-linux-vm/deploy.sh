@@ -10,7 +10,7 @@ adminPassword=Password2020!
 # Azure and VM configurations
 azureResourceGroup=$RESOURCE_GROUP_NAME
 locaton=$LOCATION
-randomName=twtapp-$RANDOM
+randomName=twtapp$RANDOM
 
 
 # Print out tail command
