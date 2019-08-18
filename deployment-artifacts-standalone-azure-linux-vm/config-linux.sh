@@ -18,6 +18,7 @@ apt install nodejs -y
 apt install npm -y
 
 # Install NGINX and config reverse proxy
+git clone https://github.com/neilpeterson/tailwind-reference-deployment.git
 apt-get install nginx -y
 service nginx start
 rm /etc/nginx/sites-available/default
@@ -28,8 +29,8 @@ nginx -s reload
 # Set environment variables
 export apiUrl=/api/v1
 export ApiUrlShoppingCart=/api/v1
-export SqlConnectionString=
-export MongoConnectionString=
+# export SqlConnectionString=
+# export MongoConnectionString=
 
 # Publish and start application
 cd /tailwind/Source/Tailwind.Traders.Web
