@@ -2,18 +2,6 @@
 	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
 	"contentVersion": "1.0.0.0",
 	"parameters": {
-		"servicePrincipalId": {
-			"type": "string",
-			"metadata": {
-				"description": "The service principle application id is used when deploying the Azure Kubernetes Service cluster."
-			  }
-		},
-		"servicePrincipalSecret": {
-			"type": "securestring",
-			"metadata": {
-				"description": "The service principle password is used when deploying the Azure Kubernetes Service cluster."
-			  }
-		},
 		"emailAddress": {
 			"type": "string",
 			"metadata": {
@@ -105,14 +93,6 @@
 							{
 								"name": "SESSION_CODE",
 								"secureValue": "[variables('sessionCode')]"
-							},
-							{
-								"name": "CLIENT_ID",
-								"secureValue": "[parameters('servicePrincipalId')]"
-							},
-							{
-								"name": "SECRET",
-								"secureValue": "[parameters('servicePrincipalSecret')]"
 							},
 							{
 								"name": "USER_ID",
