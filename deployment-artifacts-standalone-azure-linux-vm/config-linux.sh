@@ -21,21 +21,22 @@ apt install npm -y
 git clone https://github.com/neilpeterson/tailwind-reference-deployment.git
 apt-get install nginx -y
 service nginx start
-# rm /etc/nginx/sites-available/default
-# cp /deployment-artifacts-standalone-azure-linux-vm/default /etc/nginx/sites-available/default
-# nginx -t
-# nginx -s reload
+rm /etc/nginx/sites-available/default
+curl https://raw.githubusercontent.com/neilpeterson/tailwind-reference-deployment/master/deployment-artifacts-standalone-azure-linux-vm/default > /etc/nginx/sites-available/default
+nginx -t
+nginx -s reload
+
+# Build SQL connection string
+SqlConnectionString="$(echo $1 | sed 's/{your_username}/twtadmin /g')"
+SqlConnectionString="$(echo $SqlConnectionString | sed 's/{your_password}/Password2020! /g')"
 
 # Set environment variables
 export apiUrl=/api/v1
 export ApiUrlShoppingCart=/api/v1
-# export SqlConnectionString=
-# export MongoConnectionString=
+export SqlConnectionString=$SqlConnectionString
+export MongoConnectionString=$2
 
 # Publish and start application
 cd /tailwind/Source/Tailwind.Traders.Web
 dotnet publish -c Release
-# dotnet bin/Release/netcoreapp2.1/publish/Tailwind.Traders.Web.dll
-
-
-# export SqlConnectionString='Server=tcp:twt-app-001.database.windows.net,1433;Initial Catalog=tailwind;User Id=twtadmin;Password=Password2020!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;'
+dotnet bin/Release/netcoreapp2.1/publish/Tailwind.Traders.Web.dll
