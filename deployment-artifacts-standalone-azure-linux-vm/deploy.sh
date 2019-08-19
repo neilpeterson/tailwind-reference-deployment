@@ -20,6 +20,7 @@ echo "*************** Connection Information ***************"
 
 # Create Azure Cosmos DB
 az cosmosdb create --name $randomName --resource-group $azureResourceGroup --kind MongoDB
+sleep 1m
 cosmosConnectionString=$(az cosmosdb list-connection-strings --name $randomName --resource-group $azureResourceGroup --query connectionStrings[0].connectionString -o tsv)
 
 # Create Azure SQL Insance
