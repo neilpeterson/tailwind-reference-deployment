@@ -104,7 +104,7 @@
 							},
 							{
 								"name": "RANDOM",
-								"secureValue": "uniqueString(resourceGroup().id)"
+								"secureValue": "[toLower(concat(variables('rgname'), uniqueString(resourceGroup().id)))]"
 							}
 						]
 					}
