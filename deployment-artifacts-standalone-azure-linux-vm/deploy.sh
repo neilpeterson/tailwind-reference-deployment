@@ -16,6 +16,7 @@ randomName=twtapp$RANDOM
 printf "\n*** To tail logs, run this command... ***\n"
 echo "*************** Container logs ***************"
 echo "az container logs --name bootstrap-container --resource-group $azureResourceGroup --follow"
+echo $randomName
 echo "*************** Connection Information ***************"
 
 # Create Azure Cosmos DB
