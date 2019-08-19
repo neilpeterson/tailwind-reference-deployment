@@ -10,7 +10,7 @@ adminPassword=Password2020!
 # Azure and VM configurations
 azureResourceGroup=$RESOURCE_GROUP_NAME
 locaton=$LOCATION
-randomName=twtapp$RANDOM
+randomName=twtapp2
 
 # Print out tail command
 printf "\n*** To tail logs, run this command... ***\n"
