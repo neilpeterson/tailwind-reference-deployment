@@ -10,7 +10,7 @@ adminPassword=Password2020!
 # Azure and VM configurations
 azureResourceGroup=$RESOURCE_GROUP_NAME
 locaton=$LOCATION
-randomName=twtapp3
+randomName=twtapp4
 
 # Print out tail command
 printf "\n*** To tail logs, run this command... ***\n"
@@ -25,8 +25,8 @@ cosmosConnectionString=$(az cosmosdb list-connection-strings --name $randomName 
 
 # Create Azure SQL Insance
 az sql server create --location $locaton --resource-group $azureResourceGroup --name $randomName --admin-user $adminUser --admin-password $adminPassword
-az sql db create --resource-group twt-001 --server twtapp2 --name tailwind
-sqlConnectionString=$(az sql db show-connection-string --server twtapp2 --name tailwind -c ado.net)
+az sql db create --resource-group $RESOURCE_GROUP_NAME --server $randomName --name tailwind
+sqlConnectionString=$(az sql db show-connection-string --server $randomName --name tailwind -c ado.net)
 
 # Create Azure VM
 az vm create --name $randomName --resource-group $azureResourceGroup --image UbuntuLTS --admin-username $adminUser --admin-password $adminPassword
