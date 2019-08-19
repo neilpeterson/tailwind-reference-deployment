@@ -25,6 +25,7 @@ cosmosConnectionString=$(az cosmosdb list-connection-strings --name $randomName 
 
 # Create Azure SQL Insance
 az sql server create --location $locaton --resource-group $azureResourceGroup --name $randomName --admin-user $adminUser --admin-password $adminPassword
+az sql server firewall-rule create --resource-group $azureResourceGroup --server $randomName --name azure --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0
 az sql db create --resource-group $RESOURCE_GROUP_NAME --server $randomName --name tailwind
 sqlConnectionString=$(az sql db show-connection-string --server $randomName --name tailwind -c ado.net)
 
