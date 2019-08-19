@@ -26,17 +26,20 @@ curl https://raw.githubusercontent.com/neilpeterson/tailwind-reference-deploymen
 nginx -t
 nginx -s reload
 
-# Build SQL connection string
-SqlConnectionString="$(echo $1 | sed 's/{your_username}/twtadmin /g')"
-SqlConnectionString="$(echo $SqlConnectionString | sed 's/{your_password}/Password2020! /g')"
+echo $1
+echo $2
 
-# Set environment variables
-export apiUrl=/api/v1
-export ApiUrlShoppingCart=/api/v1
-export SqlConnectionString=$SqlConnectionString
-export MongoConnectionString=$2
+# # Build SQL connection string
+# SqlConnectionString="$(echo $1 | sed 's/{your_username}/twtadmin /g')"
+# SqlConnectionString="$(echo $SqlConnectionString | sed 's/{your_password}/Password2020! /g')"
 
-# Publish and start application
-cd /tailwind/Source/Tailwind.Traders.Web
-dotnet publish -c Release
-dotnet bin/Release/netcoreapp2.1/publish/Tailwind.Traders.Web.dll
+# # Set environment variables
+# export apiUrl=/api/v1
+# export ApiUrlShoppingCart=/api/v1
+# export SqlConnectionString=$SqlConnectionString
+# export MongoConnectionString=$2
+
+# # Publish and start application
+# cd /tailwind/Source/Tailwind.Traders.Web
+# dotnet publish -c Release
+# dotnet bin/Release/netcoreapp2.1/publish/Tailwind.Traders.Web.dll
