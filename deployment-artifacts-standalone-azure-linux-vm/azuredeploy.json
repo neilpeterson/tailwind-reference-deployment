@@ -101,6 +101,10 @@
 							{
 								"name": "LOCATION",
 								"secureValue": "[variables('location')]"
+							},
+							{
+								"name": "RANDOM",
+								"secureValue": "uniqueString(resourceGroup().id)"
 							}
 						]
 					}
