@@ -28,13 +28,13 @@ az sql server firewall-rule create --resource-group $azureResourceGroup --server
 az sql db create --resource-group $RESOURCE_GROUP_NAME --server $randomName --name tailwind
 sqlConnectionString=$(az sql db show-connection-string --server $randomName --name tailwind -c ado.net)
 
-# Create Azure VM
-az vm create --name $randomName --resource-group $azureResourceGroup --image UbuntuLTS --admin-username $adminUser --admin-password $adminPassword
-az vm open-port --port 80 --resource-group $azureResourceGroup --name $randomName
-az vm extension set --name customScript --publisher Microsoft.Azure.Extensions --vm-name $randomName --resource-group $azureResourceGroup \
-  --settings '{"fileUris":["https://raw.githubusercontent.com/neilpeterson/tailwind-reference-deployment/master/deployment-artifacts-standalone-azure-linux-vm/config-linux.sh"],"commandToExecute": "./config-linux.sh '$sqlConnectionString'"}'
-
 echo "************"
 echo $cosmosConnectionString
 echo $sqlConnectionString
 echo "************"
+
+# Create Azure VM
+az vm create --name $randomName --resource-group $azureResourceGroup --image UbuntuLTS --admin-username $adminUser --admin-password $adminPassword
+az vm open-port --port 80 --resource-group $azureResourceGroup --name $randomName
+az vm extension set --name customScript --publisher Microsoft.Azure.Extensions --vm-name $randomName --resource-group $azureResourceGroup \
+  --settings '{"fileUris":["https://raw.githubusercontent.com/neilpeterson/tailwind-reference-deployment/master/deployment-artifacts-standalone-azure-linux-vm/config-linux.sh"],"commandToExecute": './config-linux.sh $sqlConnectionString'}'
