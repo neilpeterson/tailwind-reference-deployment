@@ -35,7 +35,13 @@ echo "************"
 
 # Create Azure VM
 az vm create --name $randomName --resource-group $azureResourceGroup --image UbuntuLTS --admin-username $adminUser --admin-password $adminPassword
+
 az vm open-port --port 80 --resource-group $azureResourceGroup --name $randomName
-az vm extension set --name customScript --publisher Microsoft.Azure.Extensions --vm-name $randomName --resource-group $azureResourceGroup \
-  --settings '{"fileUris": [\"https://raw.githubusercontent.com/neilpeterson/tailwind-reference-deployment/master/deployment-artifacts-standalone-azure-linux-vm/config-linux.sh\"]}' \
-  --protected-settings '{"commandToExecute": "./config-linux.sh '$sqlConnectionString'"}'
+
+az vm extension set \
+  --resource-group $azureResourceGroup \
+  --vm-name $randomName \
+  --name customScript \
+  --publisher Microsoft.Azure.Extensions \
+  --settings '{"fileUris": ["https://raw.githubusercontent.com/neilpeterson/tailwind-reference-deployment/master/deployment-artifacts-standalone-azure-linux-vm/config-linux.sh"]}' \
+  --protected-settings '{"commandToExecute": "./config-linux.sh Server=tcp:zero-none5a4vbap2h6q5g.database.windows.net,1433;Database=tailwind;User ID=twtadmin;Password=Password2020!;Encrypt=true;Connection Timeout=30;"}'
