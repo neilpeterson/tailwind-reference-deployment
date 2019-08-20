@@ -16,7 +16,6 @@ randomName=$RANDOM
 printf "\n*** To tail logs, run this command... ***\n"
 echo "*************** Container logs ***************"
 echo "az container logs --name bootstrap-container --resource-group $azureResourceGroup --follow"
-echo $randomName
 echo "*************** Connection Information ***************"
 
 # Create Azure Cosmos DB
@@ -33,7 +32,7 @@ sqlConnectionString=$(az sql db show-connection-string --server $randomName --na
 az vm create --name $randomName --resource-group $azureResourceGroup --image UbuntuLTS --admin-username $adminUser --admin-password $adminPassword
 az vm open-port --port 80 --resource-group $azureResourceGroup --name $randomName
 az vm extension set --name customScript --publisher Microsoft.Azure.Extensions --vm-name $randomName --resource-group $azureResourceGroup \
-  --settings '{"fileUris":["https://raw.githubusercontent.com/neilpeterson/tailwind-reference-deployment/master/deployment-artifacts-standalone-azure-linux-vm/config-linux.sh"],"commandToExecute": "sudo sh ./config-linux.sh test1 test2"}'
+  --settings '{"fileUris":["https://raw.githubusercontent.com/neilpeterson/tailwind-reference-deployment/master/deployment-artifacts-standalone-azure-linux-vm/config-linux.sh"],"commandToExecute": "sh ./config-linux.sh test1 test2"}'
 
 
 echo "************"
