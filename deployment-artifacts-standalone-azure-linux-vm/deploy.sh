@@ -18,9 +18,9 @@ echo "*************** Container logs ***************"
 echo "az container logs --name bootstrap-container --resource-group $azureResourceGroup --follow"
 echo "*************** Connection Information ***************"
 
-# # Create Azure Cosmos DB
-# az cosmosdb create --name $randomName --resource-group $azureResourceGroup --kind MongoDB
-# cosmosConnectionString=$(az cosmosdb list-connection-strings --name $randomName --resource-group $azureResourceGroup --query connectionStrings[0].connectionString -o tsv)
+# Create Azure Cosmos DB
+az cosmosdb create --name $randomName --resource-group $azureResourceGroup --kind MongoDB
+cosmosConnectionString=$(az cosmosdb list-connection-strings --name $randomName --resource-group $azureResourceGroup --query connectionStrings[0].connectionString -o tsv)
 
 # Create Azure SQL Insance
 az sql server create --location $locaton --resource-group $azureResourceGroup --name $randomName --admin-user $adminUser --admin-password $adminPassword
@@ -30,6 +30,11 @@ sqlConnectionString=$(az sql db show-connection-string --server $randomName --na
 
 echo "************"
 echo $cosmosConnectionString
+echo $sqlConnectionString
+echo "************"
+
+echo "************"
+$sqlConnectionString = 'Server=tcp:'$1'.database.windows.net,1433;Database=tailwind;User ID='$2';Password='$3';Encrypt=true;Connection Timeout=30;'
 echo $sqlConnectionString
 echo "************"
 
@@ -44,4 +49,4 @@ az vm extension set \
   --name customScript \
   --publisher Microsoft.Azure.Extensions \
   --settings '{"fileUris": ["https://raw.githubusercontent.com/neilpeterson/tailwind-reference-deployment/master/deployment-artifacts-standalone-azure-linux-vm/config-linux.sh"]}' \
-  --protected-settings '{"commandToExecute": "./config-linux.sh Server=tcp:zero-none5a4vbap2h6q5g.database.windows.net,1433;Database=tailwind;User ID=twtadmin;Password=Password2020!;Encrypt=true;Connection Timeout=30;"}'
+  --protected-settings '{"commandToExecute": '$sqlConnectionString'}'
