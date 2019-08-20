@@ -32,20 +32,16 @@ echo $2
 echo "************"
 
 # Build SQL connection string
-SqlConnectionString="$(echo $1 | sed 's/{your_username}/twtadmin /g')"
-SqlConnectionString="$(echo $SqlConnectionString | sed 's/{your_password}/Password2020! /g')"
-
-echo "************"
-echo $SqlConnectionString
-echo "************"
+# SqlConnectionString="$(echo $1 | sed 's/{your_username}/twtadmin /g')"
+# SqlConnectionString="$(echo $SqlConnectionString | sed 's/{your_password}/Password2020! /g')"
 
 # Set environment variables
-export apiUrl=/api/v1
-export ApiUrlShoppingCart=/api/v1
-export SqlConnectionString=$SqlConnectionString
-export MongoConnectionString=$2
+# export apiUrl=/api/v1
+# export ApiUrlShoppingCart=/api/v1
+# export SqlConnectionString=$SqlConnectionString
+# export MongoConnectionString=$2
 
-# Publish and start application
-cd /tailwind/Source/Tailwind.Traders.Web
-dotnet publish -c Release
-dotnet bin/Release/netcoreapp2.1/publish/Tailwind.Traders.Web.dll
+# # Publish and start application
+# cd /tailwind/Source/Tailwind.Traders.Web
+# dotnet publish -c Release
+# dotnet bin/Release/netcoreapp2.1/publish/Tailwind.Traders.Web.dll
