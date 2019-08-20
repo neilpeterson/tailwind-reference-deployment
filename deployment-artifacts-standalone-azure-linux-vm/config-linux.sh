@@ -26,8 +26,10 @@ curl https://raw.githubusercontent.com/neilpeterson/tailwind-reference-deploymen
 nginx -t
 nginx -s reload
 
+echo "************"
 echo $1
 echo $2
+echo "************"
 
 # # Build SQL connection string
 # SqlConnectionString="$(echo $1 | sed 's/{your_username}/twtadmin /g')"
