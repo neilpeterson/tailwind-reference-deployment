@@ -34,7 +34,7 @@ echo $sqlConnectionString
 echo "************"
 
 echo "************"
-$sqlConnectionString=${Server=tcp:replace.database.windows.net,1433;Database=tailwind;User ID=replace;Password=replace;Encrypt=true;Connection Timeout=30;}
+$sqlConnectionString="${Server=tcp:replace.database.windows.net,1433;Database=tailwind;User ID=replace;Password=replace;Encrypt=true;Connection Timeout=30;}"
 echo $sqlConnectionString
 echo "************"
 
