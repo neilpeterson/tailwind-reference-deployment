@@ -19,8 +19,8 @@ echo "az container logs --name bootstrap-container --resource-group $azureResour
 echo "*************** Connection Information ***************"
 
 # Create Azure Cosmos DB
-az cosmosdb create --name $randomName --resource-group $azureResourceGroup --kind MongoDB
-cosmosConnectionString=$(az cosmosdb list-connection-strings --name $randomName --resource-group $azureResourceGroup --query connectionStrings[0].connectionString -o tsv)
+# az cosmosdb create --name $randomName --resource-group $azureResourceGroup --kind MongoDB
+# cosmosConnectionString=$(az cosmosdb list-connection-strings --name $randomName --resource-group $azureResourceGroup --query connectionStrings[0].connectionString -o tsv)
 
 # Create Azure SQL Insance
 az sql server create --location $locaton --resource-group $azureResourceGroup --name $randomName --admin-user $adminUser --admin-password $adminPassword
@@ -29,12 +29,12 @@ az sql db create --resource-group $RESOURCE_GROUP_NAME --server $randomName --na
 sqlConnectionString=$(az sql db show-connection-string --server $randomName --name tailwind -c ado.net)
 
 echo "************"
-echo $cosmosConnectionString
+# echo $cosmosConnectionString
 echo $sqlConnectionString
 echo "************"
 
 echo "************"
-$sqlConnectionString='Server=tcp:$randomName.database.windows.net,1433;Database=tailwind;User\ ID=$adminUser;Password=$adminPassword;Encrypt=true;Connection Timeout=30;'
+$sqlConnectionString="Server=tcp:"$randomName".database.windows.net,1433;Database=tailwind;User ID="$adminUser";Password="$adminPassword";Encrypt=true;Connection Timeout=30;"
 echo $sqlConnectionString
 echo "************"
 
