@@ -30,7 +30,7 @@
 		"containerName": "logs",
 		"deploymentImage": "neilpeterson/itt-bootstrap:1.0",
 		"sourceRepo": "https://github.com/neilpeterson/tailwind-reference-deployment.git",
-		"entrypoint": "/deployment-artifacts/deploy.sh",
+		"entrypoint": "/deployment-artifacts-aks/deploy.sh",
 		"sessionCode": "TWT"
 	},
 	"resources": [{
