@@ -22,7 +22,7 @@ sudo apt install npm -y
 sudo apt-get install nginx -y
 sudo service nginx start
 sudo rm /etc/nginx/sites-available/default
-sudo wget https://raw.githubusercontent.com/neilpeterson/tailwind-reference-deployment/deployment-artifacts-standalone-vm/default -O /etc/nginx/sites-available/default
+sudo wget https://raw.githubusercontent.com/neilpeterson/tailwind-reference-deployment/master/deployment-artifacts-standalone-vm/default -O /etc/nginx/sites-available/default
 sudo nginx -t
 sudo nginx -s reload
 
@@ -33,7 +33,7 @@ sudo dotnet publish -c Release -o /tailwind
 # Config application auto-start
 sudo apt-get install -y supervisor
 sudo touch /etc/supervisor/conf.d/tailwind.conf
-sudo wget https://raw.githubusercontent.com/neilpeterson/tailwind-reference-deployment/deployment-artifacts-standalone-vm/tailwind.conf -O /etc/supervisor/conf.d/tailwind.conf
+sudo wget https://raw.githubusercontent.com/neilpeterson/tailwind-reference-deployment/master/deployment-artifacts-standalone-vm/tailwind.conf -O /etc/supervisor/conf.d/tailwind.conf
 sudo sed -i "s/<replacesql>/$1/g" /etc/supervisor/conf.d/tailwind.conf
 sudo sed -i "s/<replaceuser>/$2/g" /etc/supervisor/conf.d/tailwind.conf
 sudo sed -i "s/<replacepassword>/$3/g" /etc/supervisor/conf.d/tailwind.conf

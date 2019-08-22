@@ -294,7 +294,7 @@
 					"autoUpgradeMinorVersion": true,
 					"settings": {
 						"fileUris": [
-							"https://raw.githubusercontent.com/neilpeterson/tailwind-reference-deployment/vm-template/deployment-artifacts-standalone-vm/config-linux.sh"
+							"https://raw.githubusercontent.com/neilpeterson/tailwind-reference-deployment/master/deployment-artifacts-standalone-vm/config-linux.sh"
 						]
 					},
 					"protectedSettings": {
