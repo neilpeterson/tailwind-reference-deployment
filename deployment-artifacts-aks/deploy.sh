@@ -9,7 +9,7 @@ sqlServePassword=Password12
 
 # Azure and container image location
 azureResourceGroup=$RESOURCE_GROUP_NAME
-containerRegistry=tailwindtraders
+containerRegistry=neilpeterson
 
 # Tailwind deployment
 tailwindInfrastructure=TailwindTraders-Backend/Deploy/deployment.json
@@ -76,8 +76,7 @@ helm install --name my-tt-popular-product -f $tailwindChartValues --set ingress.
 helm install --name my-tt-stock -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/stock.api --set image.tag=latest $tailwindCharts/stock-api
 helm install --name my-tt-image-classifier -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/image-classifier.api --set image.tag=latest $tailwindCharts/image-classifier-api
 helm install --name my-tt-cart -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/cart.api --set image.tag=latest $tailwindCharts/cart-api
-# This image is missing from tailwind registry
-helm install --name my-tt-login -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=neilpeterson/login.api --set image.tag=latest $tailwindCharts/login-api
+helm install --name my-tt-login -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/login.api --set image.tag=latest $tailwindCharts/login-api
 helm install --name my-tt-mobilebff -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/mobileapigw --set image.tag=latest $tailwindCharts/mobilebff
 helm install --name my-tt-webbff -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/webapigw --set image.tag=latest $tailwindCharts/webbff
 
