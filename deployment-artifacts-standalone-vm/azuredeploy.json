@@ -373,24 +373,13 @@
         ]
 		},
         {
-            "apiVersion": "2015-04-08",
+            "apiVersion": "2016-03-31",
             "type": "Microsoft.DocumentDB/databaseAccounts",
             "kind": "MongoDB",
             "name": "[variables('cosmosAccountNameUnique')]",
             "location": "[resourceGroup().location]",
             "properties": {
-              "name": "[variables('cosmosAccountNameUnique')]",
-              "databaseAccountOfferType": "Standard",
-              "locations": [
-                {
-                  "locationName": "[resourceGroup().location]",
-                  "failoverPriority": 0
-                },
-                {
-                  "locationName": "westus",
-                  "failoverPriority": 1
-                }
-              ]
+              "databaseAccountOfferType": "Standard"
             }
           }
 	]
