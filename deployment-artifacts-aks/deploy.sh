@@ -16,8 +16,8 @@ containerVersion=latest
 tailwindInfrastructure=TailwindTraders-Backend/Deploy/deployment.json
 tailwindCharts=TailwindTraders-Backend/Deploy/helm
 tailwindChartValuesScript=TailwindTraders-Backend/Deploy/Generate-Config.ps1
-#tailwindChartValues=../../../values.yaml
-tailwindChartValues=TailwindTraders-Backend/Deploy/helm/gvalues.yaml
+tailwindChartValues=../../../values.yaml
+tailwindChartGValues=TailwindTraders-Backend/Deploy/helm/gvalues.yaml
 tailwindWebImages=TailwindTraders-Backend/Deploy/tt-images
 tailwindServiceAccount=TailwindTraders-Backend/Deploy/helm/ttsa.yaml
 
@@ -82,7 +82,7 @@ helm install --name my-tt-profile -f $tailwindChartValues --set ingress.hosts={$
 helm install --name my-tt-popular-product -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/popular-product.api --set image.tag=$containerVersion --set initImage.repository=$containerRegistry/popular-product-seed.api --set initImage.tag=latest $tailwindCharts/popular-products-api
 helm install --name my-tt-stock -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/stock.api --set image.tag=$containerVersion $tailwindCharts/stock-api
 helm install --name my-tt-image-classifier -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/image-classifier.api --set image.tag=$containerVersion $tailwindCharts/image-classifier-api
-helm install --name my-tt-cart -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/cart.api --set image.tag=insturmentedv2 $tailwindCharts/cart-api --set inf.appinsights.id=$instrumentationKey
+helm install --name my-tt-cart -f $tailwindChartGValues --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/cart.api --set image.tag=insturmentedv2 $tailwindCharts/cart-api --set inf.appinsights.id=$instrumentationKey
 helm install --name my-tt-login -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/login.api --set image.tag=$containerVersion $tailwindCharts/login-api
 helm install --name my-tt-mobilebff -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/mobileapigw --set image.tag=$containerVersion $tailwindCharts/mobilebff
 helm install --name my-tt-webbff -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/webapigw --set image.tag=$containerVersion $tailwindCharts/webbff
