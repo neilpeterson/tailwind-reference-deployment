@@ -10,7 +10,7 @@ sqlServePassword=Password12
 # Azure and container image location
 azureResourceGroup=$RESOURCE_GROUP_NAME
 containerRegistry=neilpeterson
-containerVersion=insightsv2
+containerVersion=latest
 
 # Tailwind deployment
 tailwindInfrastructure=TailwindTraders-Backend/Deploy/deployment.json
