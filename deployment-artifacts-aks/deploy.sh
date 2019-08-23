@@ -40,6 +40,11 @@ az group deployment create -g $azureResourceGroup --template-file $tailwindInfra
   sqlServerAdministratorLogin=$sqlServerUser sqlServerAdministratorLoginPassword=$sqlServePassword \
   aksVersion=1.14.5 pgversion=10
 
+# Application Insights (using preview extension)
+az extension add -n application-insights
+az monitor app-insights component create --app tailwind --location eastus --kind web --resource-group $azureResourceGroup --application-type web
+instrumentationKey=$(az monitor app-insights component show --app tailwind --resource-group $azureResourceGroup --query instrumentationKey -o tsv)
+
 # Install Helm on Kubernetes cluster
 printf "\n*** Installing Tiller on Kubernets cluster... ***\n"
 
@@ -76,7 +81,7 @@ helm install --name my-tt-profile -f $tailwindChartValues --set ingress.hosts={$
 helm install --name my-tt-popular-product -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/popular-product.api --set image.tag=$containerVersion --set initImage.repository=$containerRegistry/popular-product-seed.api --set initImage.tag=latest $tailwindCharts/popular-products-api
 helm install --name my-tt-stock -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/stock.api --set image.tag=$containerVersion $tailwindCharts/stock-api
 helm install --name my-tt-image-classifier -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/image-classifier.api --set image.tag=$containerVersion $tailwindCharts/image-classifier-api
-helm install --name my-tt-cart -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/cart.api --set image.tag=insturmentedv2 $tailwindCharts/cart-api
+helm install --name my-tt-cart -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/cart.api --set image.tag=insturmentedv2 $tailwindCharts/cart-api --set inf.appinsights.id=$instrumentationKey
 helm install --name my-tt-login -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/login.api --set image.tag=$containerVersion $tailwindCharts/login-api
 helm install --name my-tt-mobilebff -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/mobileapigw --set image.tag=$containerVersion $tailwindCharts/mobilebff
 helm install --name my-tt-webbff -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/webapigw --set image.tag=$containerVersion $tailwindCharts/webbff
