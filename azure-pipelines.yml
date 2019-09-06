@@ -6,7 +6,7 @@ trigger:
 
 stages:
 
-- stage: build and test
+- stage: test
   
   jobs:
   - job:
