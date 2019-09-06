@@ -1,8 +1,36 @@
 trigger:
-- master
 
-pool:
-  vmImage: 'ubuntu-latest'
+  branches:
+    include:
+    - master
 
 stages:
+
 - stage: build and test
+  
+  jobs:
+  - job:
+
+    pool:
+      name: Hosted Ubuntu 1604
+
+    steps:
+
+    - task: CmdLine@2
+      inputs:
+        script: 'echo Hello world'
+
+- stage: deploy
+  
+  jobs:
+  - job:
+
+    pool:
+      name: Hosted Ubuntu 1604
+
+    steps:
+
+    - task: CmdLine@2
+      inputs:
+        script: 'echo Hello world'
+
