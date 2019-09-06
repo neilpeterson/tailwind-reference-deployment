@@ -9,7 +9,7 @@ stages:
 - stage: test
   
   jobs:
-  - job:
+  - job: test
 
     pool:
       name: Hosted Ubuntu 1604
@@ -23,7 +23,7 @@ stages:
 - stage: deploy
   
   jobs:
-  - job:
+  - job: deploy
 
     pool:
       name: Hosted Ubuntu 1604
