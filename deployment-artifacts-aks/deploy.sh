@@ -15,7 +15,7 @@ containerVersion=v2
 # Tailwind deployment
 tailwindInfrastructure=TailwindTraders-Backend/Deploy/deployment.json
 tailwindCharts=TailwindTraders-Backend/Deploy/helm
-tailwindChartValuesScript=tailwind-reference-deployment-sandbox/deployment-artifacts-aks/helm-values/generate-config.ps1
+tailwindChartValuesScript=tailwind-reference-deployment/deployment-artifacts-aks/helm-values/generate-config.ps1
 tailwindChartValues=/values.yaml
 tailwindWebImages=TailwindTraders-Backend/Deploy/tt-images
 tailwindServiceAccount=TailwindTraders-Backend/Deploy/helm/ttsa.yaml
@@ -29,9 +29,8 @@ echo "*************** Connection Information ***************"
 # Get backend code
 printf "\n*** Cloning Tailwind code repository... ***\n"
 
-# Breaking changes have been added upstream
-# git clone https://github.com/microsoft/TailwindTraders-Backend.git
-git clone https://github.com/neilpeterson/TailwindTraders-Backend.git
+# Pulling from a stable fork of the tailwind backend
+git clone https://github.com/nepeters007/TailwindTraders-Backend.git
 
 # Deploy backend infrastructure
 printf "\n*** Deploying resources: this will take a few minutes... ***\n"
@@ -89,7 +88,7 @@ helm install --name my-tt-cart -f $tailwindChartValues --set ingress.hosts={$ING
 helm install --name my-tt-mobilebff -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/mobileapigw --set image.tag=$containerVersion --set probes.readiness=null $tailwindCharts/mobilebff
 helm install --name my-tt-webbff -f $tailwindChartValues --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/webapigw --set image.tag=$containerVersion $tailwindCharts/webbff
 
-# Issue to fix with upstream: https://github.com/microsoft/TailwindTraders-Website/commit/0ab7e92f437c45fd6ac5c7c489e88977fd1f6ebc
+# Pulling from a stable fork of the tailwind website
 git clone https://github.com/neilpeterson/TailwindTraders-Website.git
 helm install --name web -f TailwindTraders-Website/Deploy/helm/gvalues.yaml --set ingress.protocol=http --set ingress.hosts={$INGRESS} --set image.repository=$containerRegistry/web --set image.tag=v1 TailwindTraders-Website/Deploy/helm/web/
 
