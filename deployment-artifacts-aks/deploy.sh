@@ -29,8 +29,7 @@ echo "*************** Connection Information ***************"
 # Get backend code
 printf "\n*** Cloning Tailwind code repository... ***\n"
 
-# Pulling from a stable fork of the tailwind backend
-# git clone https://github.com/nepeters007/TailwindTraders-Backend.git
+# Clone Tailwind backend and checkout known stable tag
 git clone https://github.com/microsoft/TailwindTraders-Backend.git
 git -C TailwindTraders-Backend checkout ed86d5f
 
