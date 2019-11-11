@@ -39,7 +39,7 @@ printf "\n*** Deploying resources: this will take a few minutes... ***\n"
 az group deployment create -g $azureResourceGroup --template-file $tailwindInfrastructure \
   --parameters servicePrincipalId=$azureClientID servicePrincipalSecret=$azureClientSecret \
   sqlServerAdministratorLogin=$sqlServerUser sqlServerAdministratorLoginPassword=$sqlServePassword \
-  aksVersion=1.14.6 pgversion=10
+  aksVersion=1.14.8 pgversion=10
 
 # # Application Insights (using preview extension)
 az extension add -n application-insights
